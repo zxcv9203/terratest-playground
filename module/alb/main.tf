@@ -1,12 +1,20 @@
-terraform {
-  required_version = ">= 0.12, < 0.13"
+provider "aws" {
+  region = "us-west-1"
+}
+
+data "aws_vpc" "default" {
+  default = true
+}
+
+data "aws_subnet_ids" "default" {
+  vpc_id = data.aws_vpc.default.id
 }
 
 resource "aws_lb" "example" {
   name               = var.alb_name
   load_balancer_type = "application"
 
-  subnets            = var.subnet_ids
+  subnets            = data.aws_subnet_ids.default.ids
 
   security_groups    = [aws_security_group.alb.id]
 }
