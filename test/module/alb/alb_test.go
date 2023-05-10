@@ -1,4 +1,4 @@
-package test
+package alb
 
 import (
 	"crypto/tls"
@@ -12,7 +12,7 @@ import (
 func TestAlbExample(t *testing.T) {
 	// 모듈 위치 지정
 	opts := &terraform.Options{
-		TerraformDir: "../module/alb",
+		TerraformDir: "../../../module/alb",
 	}
 
 	// 테스트 종료시 모든 리소스 삭제
