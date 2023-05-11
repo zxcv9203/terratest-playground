@@ -1,9 +1,15 @@
 module "asg" {
   source = "../asg"
 
+
   cluster_name  = "hello-world-${var.environment}"
   ami           = var.ami
-  user_data     = data.template_file.user_data.rendered
+    user_data    = templatefile("${path.module}/user-data.sh", {
+        server_port = var.server_port
+        db_address  = local.mysql_config.address
+        db_port     = local.mysql_config.port
+        server_text = var.server_text
+    })
   instance_type = var.instance_type
 
   min_size           = var.min_size
@@ -21,18 +27,6 @@ module "alb" {
   source = "../alb"
 
   alb_name   = "hello-world-${var.environment}"
-  subnet_ids = local.subnet_ids
-}
-
-data "template_file" "user_data" {
-  template = file("${path.module}/user-data.sh")
-
-  vars = {
-    server_port = var.server_port
-    db_address  = local.mysql_config.address
-    db_port     = local.mysql_config.port
-    server_text = var.server_text
-  }
 }
 
 resource "aws_lb_target_group" "asg" {

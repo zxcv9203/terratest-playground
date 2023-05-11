@@ -33,7 +33,7 @@ variable "db_remote_state_key" {
 variable "ami" {
   description = "The AMI to run in the cluster"
   type        = string
-  default     = "ami-0c55b159cbfafe1f0"
+  default     = "ami-081a3b9eded47f0f3"
 }
 
 variable "instance_type" {
