@@ -11,6 +11,7 @@ import (
 )
 
 func TestHelloWorldAppExample(t *testing.T) {
+	t.Parallel()
 	opts := &terraform.Options{
 		TerraformDir: "../../../dev/app",
 

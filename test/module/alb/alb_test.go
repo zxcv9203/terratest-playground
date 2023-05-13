@@ -10,6 +10,7 @@ import (
 )
 
 func TestAlbExample(t *testing.T) {
+	t.Parallel()
 	// 모듈 위치 지정
 	opts := &terraform.Options{
 		TerraformDir: "../../../module/alb",
