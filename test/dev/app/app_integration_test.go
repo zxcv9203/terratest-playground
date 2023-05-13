@@ -60,6 +60,8 @@ func createAppOpts(opts *terraform.Options, path string) *terraform.Options {
 			"db_remote_state_key":    opts.BackendConfig["key"],
 			"environment":            opts.Vars["db_name"],
 		},
+
+		Reconfigure: true,
 	}
 }
 
@@ -84,5 +86,7 @@ func createDbOpts(t *testing.T, dir string) *terraform.Options {
 			"key":     testStateKey,
 			"encrypt": true,
 		},
+
+		Reconfigure: true,
 	}
 }
