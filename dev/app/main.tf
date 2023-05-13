@@ -6,8 +6,10 @@ module "hello_world_app" {
   source = "../../module/app"
 
   server_text = "Hello, World"
-  environment = "example"
 
+  environment = "example"
+  db_remote_state_bucket = var.db_remote_state_bucket
+  db_remote_state_key = var.db_remote_state_key
   mysql_config = var.mysql_config
 
   instance_type = "t2.micro"
