@@ -63,3 +63,6 @@ terraform.rc
 *.hcl
 .terraform
 # End of https://www.toptal.com/developers/gitignore/api/terraform,go
+
+# 중간 저장을 위한 test-data ignore
+**/.test-data
