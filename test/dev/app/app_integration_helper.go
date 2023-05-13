@@ -6,6 +6,7 @@ import (
 	http_helper "github.com/gruntwork-io/terratest/modules/http-helper"
 	"github.com/gruntwork-io/terratest/modules/random"
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 	"strings"
 	"testing"
 	"time"
@@ -72,4 +73,37 @@ func createDbOpts(t *testing.T, dir string) *terraform.Options {
 
 		Reconfigure: true,
 	}
+}
+
+func validateAppWithPath(t *testing.T, path string) {
+	opts := test_structure.LoadTerraformOptions(t, path)
+	validateApp(t, opts)
+}
+
+func teardownApp(t *testing.T, path string) {
+	opts := test_structure.LoadTerraformOptions(t, path)
+	defer terraform.Destroy(t, opts)
+}
+
+func deployApp(t *testing.T, dbPath string, appPath string) {
+	dbOpts := test_structure.LoadTerraformOptions(t, dbPath)
+	appOpts := createAppOpts(dbOpts, appPath)
+
+	test_structure.SaveTerraformOptions(t, appPath, appOpts)
+
+	terraform.InitAndApply(t, appOpts)
+}
+
+func teardownDb(t *testing.T, path string) {
+	opts := test_structure.LoadTerraformOptions(t, path)
+	defer terraform.Destroy(t, opts)
+}
+
+func deployDb(t *testing.T, path string) {
+	opts := createDbOpts(t, path)
+
+	// 나중에 실행되는 다른 테스트 단계에서 데이터를 다시 읽을 수 있도록 데이터를 디스크에 저장
+	test_structure.SaveTerraformOptions(t, path, opts)
+
+	terraform.InitAndApply(t, opts)
 }
