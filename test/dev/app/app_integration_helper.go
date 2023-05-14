@@ -44,8 +44,13 @@ func createAppOpts(opts *terraform.Options, path string) *terraform.Options {
 			"db_remote_state_key":    opts.BackendConfig["key"],
 			"environment":            opts.Vars["db_name"],
 		},
-
 		Reconfigure: true,
+		// 알려진 오류가 발생하면 테스트를 5초 간격으로 3번 재시도
+		MaxRetries:         3,
+		TimeBetweenRetries: 5 * time.Second,
+		RetryableTerraformErrors: map[string]string{
+			"RequestError: send request failed": "Throttling issue?",
+		},
 	}
 }
 
