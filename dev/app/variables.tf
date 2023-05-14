@@ -3,26 +3,32 @@ variable "mysql_config" {
 
   type = object({
     address = string
-    port = number
+    port    = number
   })
   default = {
     address = "mock-mysql-address"
-    port = 12345
+    port    = 12345
   }
 }
 
 variable "db_remote_state_bucket" {
   description = "The name of the S3 bucket for the database's remote state"
-  type = string
+  type        = string
 }
 
 variable "db_remote_state_key" {
   description = "The name of the environment we're deploying to"
-  type = string
+  type        = string
 }
 
 variable "environment" {
   description = "The name of the environment we're deploying to"
-  type = string
-  default = "develop"
+  type        = string
+  default     = "develop"
+}
+
+variable "server_text" {
+  description = "The text the web server should return"
+  default     = "Hello, World"
+  type        = string
 }

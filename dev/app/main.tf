@@ -5,7 +5,7 @@ provider "aws" {
 module "hello_world_app" {
   source = "../../module/app"
 
-  server_text = "Hello, World"
+  server_text = var.server_text
 
   environment = "example"
   db_remote_state_bucket = var.db_remote_state_bucket
