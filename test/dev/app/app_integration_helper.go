@@ -112,3 +112,42 @@ func deployDb(t *testing.T, path string) {
 
 	terraform.InitAndApply(t, opts)
 }
+
+func redeployApp(t *testing.T, path string) {
+	opts := test_structure.LoadTerraformOptions(t, path)
+
+	albDnsName := terraform.OutputRequired(t, opts, "alb_dns_name")
+	url := fmt.Sprintf("http://%s", albDnsName)
+
+	// 앱이 200 OK로 응답하는지 1초마다 확인 시작
+	stopChecking := make(chan bool, 1)
+	waitGroup, _ := http_helper.ContinuouslyCheckUrl(
+		t,
+		url,
+		stopChecking,
+		1*time.Second,
+	)
+
+	// 서버 텍스트를 업데이트 재배포
+	newServerText := "Hello, World, v2!"
+	opts.Vars["server_text"] = newServerText
+	terraform.Apply(t, opts)
+
+	// 새 버전이 배포되었는지 확인
+	maxRetries := 10
+	timeBetweenRetries := 10 * time.Second
+	http_helper.HttpGetWithRetryWithCustomValidation(
+		t,
+		url,
+		&tls.Config{},
+		maxRetries,
+		timeBetweenRetries,
+		func(status int, body string) bool {
+			return status == 200 && strings.Contains(body, newServerText)
+		},
+	)
+
+	// 검사 중지
+	stopChecking <- true
+	waitGroup.Wait()
+}

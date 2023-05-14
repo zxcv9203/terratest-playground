@@ -26,4 +26,7 @@ func TestAppWithStage(t *testing.T) {
 
 	// App 유효성 검증
 	stage(t, "validate_app", func() { validateAppWithPath(t, devAppPath) })
+
+	// App 재배포
+	stage(t, "redeploy_app", func() { redeployApp(t, devAppPath) })
 }
